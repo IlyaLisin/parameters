@@ -46,6 +46,19 @@ logger.log("Средний периметр зерна", str(averP))
 #print (kernelCount)
 # TODO балл зерна, метод подсчета зерен, ГОСТ-5639-82, 3.4
 
+# 1 кв.мм соответствует SCALE пикселям
+SCALE = 100
+
+# Средняя площадь сечения зерна в кв. мм.
+a = averS / SCALE
+
+# Среднее число зёрен на площади 1 кв. мм.
+height, width, channels = image.shape
+m = kernelCount * SCALE / (height * width)
+
+# Средний диаметр зерна в мм
+d = 2 * math.sqrt(a/math.pi)
+
 # Show
 cv2.imshow("Keypoints", im_with_keypoints)
 cv2.waitKey(0)
