@@ -37,8 +37,6 @@ if __name__ == '__main__':
     # load the image
     image = cv2.imread("images/0000.png")
 
-    # TODO сделать другую бинаризацию
-
     mask = cv2.inRange(image, np.array([0, 0, 0], dtype="uint8"), np.array([100, 100, 100], dtype="uint8"))
     im = mask
 
@@ -76,11 +74,10 @@ if __name__ == '__main__':
     logger.log("Максимальный периметр зерна, мм", str(maxP))
     logger.log("Средний периметр зерна, мм", str(averP))
 
+    # Балл зерна, метод подсчета зерен, ГОСТ-5639-82, 3.4
     ball = round(math.log(averS)/math.log(0.5) - 3)
     logger.log("Балл зерна", str(ball))
-    # print (kernelCount)
-    # TODO балл зерна, метод подсчета зерен, ГОСТ-5639-82, 3.4
-    height, width = image.shape
+
     # Show
     cv2.imshow("Keypoints", im_with_keypoints)
     cv2.waitKey(0)
