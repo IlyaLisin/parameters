@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import math
 from fileLogger import FileLogger
+import sys
 
 
 def pixels_to_mm(pixels, dpi, scale):
@@ -35,17 +36,17 @@ if __name__ == '__main__':
     logger = FileLogger()
 
     # load the image
-    image = cv2.imread("images/0000.png")
+    if len(sys.argv) < 2:
+        image = cv2.imread("image.png")
+    else:
+        image = cv2.imread(sys.argv[1])
 
     mask = cv2.inRange(image, np.array([0, 0, 0], dtype="uint8"), np.array([100, 100, 100], dtype="uint8"))
-    im = mask
 
-    ret, thresh = cv2.threshold(im, 127, 255, 0)
-    image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    image, contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    im_with_keypoints = image
-    for i in range(len(contours)):
-        im_with_keypoints = cv2.drawContours(im_with_keypoints, contours, i, (255, 0, 0), 2)
+    image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+    cv2.drawContours(image, contours, -1, (0, 0, 255), 2)
 
     # CALCULATE PARAMETERS
     kernelCount = len(contours)
@@ -60,7 +61,7 @@ if __name__ == '__main__':
     logger.log("Максимальная площадь зерна, кв. мм.", str(maxS))
     logger.log("Средняя площадь зерна, кв. мм.", str(averS))
 
-    height, width = image.shape
+    height, width, _ = image.shape
     image_square = pixels_to_mm(height, DPI, SCALE) * pixels_to_mm(width, DPI, SCALE)
     kernels_on_1_mm = kernelCount / image_square
     logger.log("Число зерен на площади 1 кв. мм.", str(kernels_on_1_mm))
@@ -79,5 +80,5 @@ if __name__ == '__main__':
     logger.log("Балл зерна", str(ball))
 
     # Show
-    cv2.imshow("Keypoints", im_with_keypoints)
+    cv2.imshow("Keypoints", image)
     cv2.waitKey(0)
