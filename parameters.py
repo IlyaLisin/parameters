@@ -79,8 +79,6 @@ if __name__ == '__main__':
     ball = round(math.log(averS)/math.log(0.5) - 3)
     logger.log("Балл зерна", str(ball))
 
-    #TODO Красный контур
-
     # Show
     cv2.imshow("Keypoints", image)
     cv2.waitKey(0)
