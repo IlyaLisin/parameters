@@ -1,1 +1,2 @@
-/home/sergfilippov/PycharmProjects/untitled/parameters/dist/parameters/parameters
+#!/bin/bash
+parameters/parameters $1
